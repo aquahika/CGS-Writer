@@ -137,6 +137,7 @@ print "インデックスデータ書き込み中...\n"
 `diskutil unmountDisk #{diskName}`
 `sudo dd bs=512 seek=#{(0x2A04000 / bs).to_s} if=#{curDir}/raw/index of=/dev/r#{diskName}`
 
+sleep 5
 print "紋紙データ書き込み中...\n"
 `diskutil unmountDisk #{diskName}`
 `sudo dd bs=512 seek=#{(0x2A24000 / bs).to_s} if=#{curDir}/raw/chunk of=/dev/r#{diskName}`
