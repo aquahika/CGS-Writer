@@ -1,6 +1,9 @@
-require './bmpparser.rb'
-require './titleblock.rb'
-require './datablock.rb'
+require_relative './bmpparser.rb'
+#$LOAD_PATH.push(File.expand_path(File.dirname(__FILE__)))
+
+
+require_relative './titleblock.rb'
+require_relative './datablock.rb'
 
 def makeCGS(path) 
 

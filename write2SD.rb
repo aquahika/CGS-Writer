@@ -1,9 +1,12 @@
+#!/usr/bin/env ruby
+
 require 'fileutils'
 
 #ロードするパスにこのスクリプトがあるディレクトリを追加する
-$LOAD_PATH.push(File.expand_path(File.dirname(__FILE__)))
+#$LOAD_PATH.push(File.expand_path(File.dirname(__FILE__)))
+#$:.unshift File.dirname(__FILE__)
 
-require './cgs.rb'
+require_relative './cgs.rb'
 
 
 # 対象のシステムディスクを探す
@@ -142,3 +145,4 @@ print "紋紙データ書き込み中...\n"
 
 
 
+print "終了しました\n"
