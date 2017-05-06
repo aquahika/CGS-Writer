@@ -1,0 +1,6 @@
+*.bmp
+*.cgs
+
+raw/*
+
+.DS_Store
