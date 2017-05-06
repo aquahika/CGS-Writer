@@ -47,7 +47,6 @@ cgsList = Dir.glob("#{curDir}/cgs/*.cgs")
 #  Make index file
 #
 
-
 index = Array.new()
 lastCylinder = 0x00
 cgsList.each do |cgsPath|
@@ -135,7 +134,6 @@ end
 bs = 512
 
 print "インデックスデータ書き込み中...\n"
-print "パスワードを入力してください\n"
 `diskutil unmountDisk #{diskName}`
 `sudo dd bs=512 seek=#{(0x2A04000 / bs).to_s} if=#{curDir}/raw/index of=/dev/r#{diskName}`
 
