@@ -24,6 +24,7 @@ def buildDataBlock(bmp)
   end
   print "|100%\n"
 
+  p bmp.length
   for i in 0...(bmp.length) do
     print "¥" if i != 0 && (i % (((bmp.length).to_i)/100)) == 0
     dataRecord = Array.new(11)
@@ -74,9 +75,11 @@ def buildDataBlock(bmp)
 
     dataRecord.push(cs)
 
-    dataBlock += dataRecord
+    dataBlock.concat(dataRecord)
 
     throw "dataBlock size error" if dataRecord.pack('C*').bytesize != 0x400
+
+    dataRecord = nil
   end
 
   print " \n"
