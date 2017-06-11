@@ -165,21 +165,21 @@ end
 
 bs = 0x4000
 
-print "インデックスデータ書き込み中...\n"
+print "\n\nインデックスデータ書き込み準備中...\n"
     
 unmount(diskName)
-print "アンマウント成功、書き込み開始[Control-Tで進捗表示]"
+print "アンマウント成功、書き込み開始。[Control-Tで進捗表示]\n"
 `sudo dd bs=#{bs.to_s} seek=#{(0x2A04000 / bs).to_s} if=#{curDir}/raw/index of=/dev/r#{diskName}`
-
-sleep 5
-
+print "インデックスデータ書き込み完了\n"
 
 
-print "紋紙データ書き込み中...\n"
+
+print "\n\n紋紙データ書き込み準備中...\n"
 unmount(diskName)
-print "アンマウント成功、書き込み開始[Control-Tで進捗表示]"
+print "アンマウント成功、書き込み開始。[Control-Tで進捗表示]\n"
 `sudo dd bs=#{bs.to_s} seek=#{(0x2A24000 / bs).to_s} if=#{curDir}/raw/chunk of=/dev/r#{diskName}`
+print "紋紙データ書き込み完了\n\n"
 unmount(diskName)
 
 
-print "終了しました。 ディスクを取り外してください\n"
+print "正常に終了しました。 ディスクを取り外してください。\n"
