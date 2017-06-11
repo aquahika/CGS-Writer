@@ -24,16 +24,17 @@ end
 
 diskName = diskName.match(/disk\d/).to_s
 
+
 p curDir = File.expand_path(File.dirname(__FILE__))
 
 FileUtils.rm(Dir.glob("#{curDir}/raw/*"))
 FileUtils.rm(Dir.glob("#{curDir}/cgs/*"))
 
-bmpList =  Dir.glob("#{curDir}/bmp/*.bmp")
+bmpList =  Dir.glob("#{curDir}/bmp/*.{bmp,BMP}")
 
 throw "ビットファイルがありません。bmp/ディレクトリにファイルをいれてください" if bmpList.length == 0
 
-bmpList.each do |bmpPath|
+bmpList.sort.each do |bmpPath|
   makeCGS(bmpPath)
 end
 
@@ -41,6 +42,11 @@ end
 
 
 cgsList = Dir.glob("#{curDir}/cgs/*.cgs")
+
+cgsList.sort!
+
+p cgsList
+
 
 
 #
@@ -131,17 +137,49 @@ end
 # Index Address = 0x2A04000
 #
 
-bs = 512
+
+
+def unmount(diskName)
+  # リトライ回数
+  cnt_retry = 0
+  begin
+    
+    result = system("diskutil unmountDisk #{diskName}")
+    #result = system("diskutil unmountDisk disk1")
+    throw if !result
+  rescue
+    # カウンタインクリメント
+    cnt_retry += 1
+    # ４回までリトライする
+    print "アンマウント失敗。リトライします。\n"
+    sleep 3
+    if cnt_retry < 5
+      retry
+    else
+      throw "アンマウントに失敗しました。データは正常に書き込まれていません。"
+    end
+  end
+end
+
+
+
+bs = 0x4000
 
 print "インデックスデータ書き込み中...\n"
-`diskutil unmountDisk #{diskName}`
-`sudo dd bs=512 seek=#{(0x2A04000 / bs).to_s} if=#{curDir}/raw/index of=/dev/r#{diskName}`
+    
+unmount(diskName)
+print "アンマウント成功、書き込み開始[Control-Tで進捗表示]"
+`sudo dd bs=#{bs.to_s} seek=#{(0x2A04000 / bs).to_s} if=#{curDir}/raw/index of=/dev/r#{diskName}`
 
 sleep 5
+
+
+
 print "紋紙データ書き込み中...\n"
-`diskutil unmountDisk #{diskName}`
-`sudo dd bs=512 seek=#{(0x2A24000 / bs).to_s} if=#{curDir}/raw/chunk of=/dev/r#{diskName}`
+unmount(diskName)
+print "アンマウント成功、書き込み開始[Control-Tで進捗表示]"
+`sudo dd bs=#{bs.to_s} seek=#{(0x2A24000 / bs).to_s} if=#{curDir}/raw/chunk of=/dev/r#{diskName}`
+unmount(diskName)
 
 
-
-print "終了しました\n"
+print "終了しました。 ディスクを取り外してください\n"

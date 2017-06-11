@@ -1,0 +1,1 @@
+p system("diskutil unmountDisk disk1")
