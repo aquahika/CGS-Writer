@@ -4,3 +4,5 @@
 raw/*
 
 !.gitkeep
+
+*.DS_Store

@@ -143,7 +143,7 @@ def unmount(diskName)
   # リトライ回数
   cnt_retry = 0
   begin
-    
+
     result = system("diskutil unmountDisk #{diskName}")
     #result = system("diskutil unmountDisk disk1")
     throw if !result
@@ -166,13 +166,14 @@ end
 bs = 0x4000
 
 print "\n\nインデックスデータ書き込み準備中...\n"
-    
+
 unmount(diskName)
 print "アンマウント成功、書き込み開始。[Control-Tで進捗表示]\n"
 `sudo dd bs=#{bs.to_s} seek=#{(0x2A04000 / bs).to_s} if=#{curDir}/raw/index of=/dev/r#{diskName}`
 print "インデックスデータ書き込み完了\n"
 
 
+sleep 3
 
 print "\n\n紋紙データ書き込み準備中...\n"
 unmount(diskName)

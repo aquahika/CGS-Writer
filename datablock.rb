@@ -1,7 +1,7 @@
 
-# Control Byte 
+# Control Byte
 # 0x24 0b 0010 0100  Start
-# 0x04 0b 0000 0100  ... 
+# 0x04 0b 0000 0100  ...
 # 0xC4 0b 1100 0100  EOF
 
 # 0
@@ -10,17 +10,30 @@
 # X ... EOD         If EOF = 1, this is also 1
 # X ... OTHER REC   1 = Other , 0 = Mongami
 # X ... DLT REC     1 = Deleted
-# X ... Record Type  
-# X ... Record Type 
 # X ... Record Type
-# X ... Drive Number 
+# X ... Record Type
+# X ... Record Type
+# X ... Drive Number
+
+
+def reverseBitOrder(byte)
+  b0 = (byte >> 0) & 1
+  b1 = (byte >> 1) & 1
+  b2 = (byte >> 2) & 1
+  b3 = (byte >> 3) & 1
+  b4 = (byte >> 4) & 1
+  b5 = (byte >> 5) & 1
+  b6 = (byte >> 6) & 1
+  b7 = (byte >> 7) & 1
+  return (b0 << 7)+(b1 << 6)+(b2 << 5)+(b3 << 4)+(b4 << 3)+(b5 << 2)+(b6 << 1)+(b7 << 0)
+end
 
 def buildDataBlock(bmp)
 
   dataBlock = Array.new
 
   100.times do
-  print ' ' 
+  print ' '
   end
   print "|100%\n"
 
@@ -64,12 +77,17 @@ def buildDataBlock(bmp)
 
     dataRecord[9,1] = hibako
 
-    dataRecord += bmp[i].unpack('C*')
+    dataRecord[10,1] = 0x00 #Unused
+
+    bmp[i].unpack('C*').each do |byte|
+      dataRecord.push(reverseBitOrder(byte))
+    end
+
 
     #Calculate Checksum
     cs = 0x00
     dataRecord.each do |byte|
-     cs = (cs + byte) & 0xFF 
+     cs = (cs + byte) & 0xFF
     end
     cs = 0x100 - cs
 
